@@ -1,3 +1,5 @@
+// server.js
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -5,13 +7,16 @@ const cors = require('cors');
 const app = express();
 
 // Middleware
-app.use(express.json());
-
-// Update CORS configuration
 app.use(cors({
-    origin: ['http://localhost:8080', 'https://sparkling-travesseiro-de3bef.netlify.app'],
+    origin: ['https://1331slot.netlify.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
     credentials: true
 }));
+
+app.options('*', cors()); // Include before other routes
+
+app.use(express.json());
 
 // Routes
 app.use('/auth', require('./routes/auth'));
