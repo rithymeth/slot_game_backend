@@ -1,30 +1,26 @@
 // server.js
 
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const authRoutes = require('./routes/auth');
-const gameRoutes = require('./routes/game');
-
 const app = express();
 
 // Middleware
-app.use(express.json());
 app.use(cors());
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+app.use(express.json());
 
 // Routes
-app.use('/auth', authRoutes);
-app.use('/game', gameRoutes);
+app.use('/auth', require('./routes/auth'));
+app.use('/game', require('./routes/game'));
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Database Connection
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/slot_machine';
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
+
+// Listen on the appropriate port
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
